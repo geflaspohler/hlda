@@ -36,7 +36,7 @@ def GEM_draw(m, pi):
 
     Sum = V1
     V_cur = 1 - V1
-    for level in xrange(1, NUM_LEVELS):
+    for level in xrange(1, NUM_LEVELS-1):
         Vi = np.random.beta(m*pi, (1-m)*pi)
 
         thetas[level] = Vi * V_cur
@@ -44,8 +44,7 @@ def GEM_draw(m, pi):
 
         V_cur = V_cur * (1 - Vi)
 
-    thetas[NUM_LEVELS-1] = 1 - Sum;
-
+    thetas[NUM_LEVELS-1] = 1.000 - np.sum(thetas);
     return thetas
 
 class Table:
@@ -191,12 +190,22 @@ for document in xrange(NUM_DOCUMENTS):
     theta_d = GEM_draw(m, pi) 
 
     for n in xrange(NUM_WORDS):
-        print theta_d
-        print NUM_LEVELS
-        level_dn = np.random.choice(NUM_LEVELS, p = [theta_d])
-        word_dn = np.random.choice(NUM_WORDS, p = [path_d[z_dn].get_topic()])
-        doc.append(word_dn)
+        level_dn = np.random.choice(NUM_LEVELS, 1, p = theta_d)
+        word_dn = np.random.choice(NUM_WORDS, p = path_d[level_dn].get_topic())
+        doc_d.append(vocab[word_dn])
     corpus.append(doc_d)
+
+fwrite = open('sym_documents.txt', 'w+')
+
+for doc_i, document in enumerate(corpus):
+    fwrite.write("Document <" + str(doc_i) + "> \n")
+    for word in document:
+        fwrite.write(word + " ") 
+    fwrite.write('\n\n') 
+
+# Need to output [# of unique terms] [term #] : [count] ...
+
+
 
 nCRP_draw.City.print_city()
     
