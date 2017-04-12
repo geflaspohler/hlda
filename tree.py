@@ -25,7 +25,7 @@ def top_n_words(topic,
     vocab is a map from integers to words
 
     """
-    indices = range(len(vocab))
+    indices = range(len(vocab)-1)
     indices.sort(lambda x,y: -cmp(topic[x], topic[y]))
     return([vocab[i] for i in indices[0:nwords]])
 
@@ -51,6 +51,7 @@ def read_state(state_filename,
     read the state from an iteration file (e.g., mode)
 
     """
+    print "reading from:", state_filename
     state = file(state_filename, 'r')
 
     score         = float(state.readline().split()[1])
@@ -65,6 +66,7 @@ def read_state(state_filename,
     scaling_scale = float(state.readline().split()[1])
 
     header = state.readline()
+    print header
     tree = {}
     for line in state:
 
@@ -80,6 +82,9 @@ def read_state(state_filename,
         tree[id]['ndocs'] = ndocs
         tree[id]['scale'] = scale
         topic = [int(x) for x in word_cnt.split()]
+        print len(topic)
+        print len(vocab)
+        print sig_size
         tree[id]['top_words'] = top_n_words(topic, vocab, sig_size)
         tree[id]['children'] = []
 
@@ -334,7 +339,7 @@ def write_topic_tree_dot(state,
 def make_all_trees(dir,
                    vocab_filename,
                    dmap_filename,
-                   sig_size=10,
+                   sig_size = 10,
                    ndocs=-1,
                    home=os.environ['HOME']):
 
@@ -370,7 +375,7 @@ def main(type,
          vocab_filename,
          dmap_filename,
          out_filename,
-         sig_size = 5,
+         sig_size = 10,
          ndocs = -1):
 
     vocab = map(str.strip, file(vocab_filename, "r").readlines())
