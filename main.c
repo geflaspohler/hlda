@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <string.h>
 
-#define MAX_ITER 10000
+#define MAX_ITER 5000
 #define TEST_LAG 100
 #define NRESTARTS 1
 
@@ -25,8 +25,7 @@ void main_gibbs(int ac, char* av[])
     int restart;
     for (restart = 0; restart < NRESTARTS; restart++)
     {
-        gibbs_state* state =
-                init_gibbs_state_w_rep(corpus, settings, out_dir);
+        gibbs_state* state = init_gibbs_state_w_rep(corpus, settings, out_dir);
         int iter;
         for (iter = 0; iter < MAX_ITER; iter++)
         {
@@ -63,6 +62,7 @@ void main_heldout(int ac, char* av[])
                                               200, 1, 1000);
             fprintf(test_log, "%04d %10.3f %d\n",
                     state->iter, score, ntopics_in_tree(state->tr));
+
             fflush(test_log);
         }
     }

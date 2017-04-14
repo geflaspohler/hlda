@@ -40,10 +40,10 @@ void write_gibbs_output(gibbs_state * state)
     if (score_f != NULL)
     {
         fprintf(state->score_log,
-                "%06d %14.3f %14.3f %14.3f %14.3f %7.4e %7.4e",
+                "%06d %14.3f %14.3f %14.3f %14.3f %7.4e %7.4e, %d",
                 state->iter, state->gem_score, state->eta_score,
                 state->gamma_score, state->score,
-                corp->gem_mean, corp->gem_scale);
+                corp->gem_mean, corp->gem_scale, depth);
         int l;
         for (l = 0; l < depth - 1; l++)
         {
@@ -104,8 +104,8 @@ void iterate_gibbs_state(gibbs_state * state)
     corpus* corp = state->corp;
     state->iter = state->iter + 1;
     int iter = state->iter;
-    outlog("iteration %04d (%04d topics)",
-           iter, ntopics_in_tree(state->tr));
+    outlog("iteration %04d (%04d topics) [%d score]",
+           iter, ntopics_in_tree(state->tr), state->score);
 
     // set up the sampling level (or fix at the depth - 1)
     int sampling_level = 0;

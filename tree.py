@@ -66,7 +66,6 @@ def read_state(state_filename,
     scaling_scale = float(state.readline().split()[1])
 
     header = state.readline()
-    print header
     tree = {}
     for line in state:
 
@@ -82,9 +81,6 @@ def read_state(state_filename,
         tree[id]['ndocs'] = ndocs
         tree[id]['scale'] = scale
         topic = [int(x) for x in word_cnt.split()]
-        print len(topic)
-        print len(vocab)
-        print sig_size
         tree[id]['top_words'] = top_n_words(topic, vocab, sig_size)
         tree[id]['children'] = []
 
