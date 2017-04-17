@@ -1,5 +1,7 @@
 import numpy as np
 from collections import Counter
+import sys
+import os
 
 class Table:
     def __init__(self, new_rest):
@@ -133,7 +135,7 @@ class City:
             for word in most_prevalent_words[len(most_prevalent_words)-1:-print_words-1:-1]:
                 fwrite.write(id_to_word[word].upper() + ' ')
                 print id_to_word[word].upper(),
-            fwrite.write('\n')
+            fwrite.write('\n\n')
             print
 
             if cur_rest.get_level() == self.NUM_LEVELS - 1:
@@ -141,7 +143,7 @@ class City:
             for cur_table in cur_rest.tables:
                 tree_recurse(self.restaurants[cur_table.next_restaurent], fwrite)
 
-        fwrite = open('tree_structure.txt', 'w+')
+        fwrite = open('run' + str(input) + '/tree_structure.txt', 'w+')
         base_rest = self.restaurants[0]
         tree_recurse(base_rest, fwrite)
         fwrite.close()
@@ -175,7 +177,7 @@ class GenerativeModel:
             V_cur = V_cur * (1 - Vi)
         thetas[self.NUM_LEVELS-1] = 1.000 - np.sum(thetas);
         return thetas
-    
+
     def generateDocuments(self, NUM_DOCUMENTS, NUM_WORDS):
         corpus = []
         # For every document (customer)
@@ -183,10 +185,11 @@ class GenerativeModel:
             doc_d = []
             path_d = self.nCRP_draw();
             theta_d = self.GEM_draw(self.m, self.pi)
+            #theta_d = np.random.dirichlet([m]*3)
 
             for n in xrange(NUM_WORDS):
                 level_dn = np.random.choice(self.NUM_LEVELS, p = theta_d)
-                word_dn = np.random.choice(NUM_WORDS, p = path_d[level_dn].get_topic())
+                word_dn = np.random.choice(VOCAB_SIZE, p = path_d[level_dn].get_topic())
                 doc_d.append(id_to_word[word_dn])
             corpus.append(doc_d)
         return corpus
@@ -196,7 +199,7 @@ class GenerativeModel:
         
 # Parameters
 NUM_DOCUMENTS = 100;
-VOCAB_SIZE = 250
+VOCAB_SIZE = 100
 NUM_WORDS = 250;
 NUM_LEVELS = 3
 
@@ -209,17 +212,21 @@ for i, word in enumerate(id_to_word):
     word_to_id[word] = i
 
 
+input = int(sys.argv[1])
+if not os.path.exists('run' + str(input)):
+    os.makedirs('run' + str(input))
+
 # Hyperparmeters
-ETA = [0.005] * len(id_to_word) 
+ETA = [1.5] * VOCAB_SIZE 
 m = 0.5
 pi = 100
-gamma = 1.0
+gamma = 0.5
 
 hLDA_model = GenerativeModel(ETA, gamma, m, pi, NUM_LEVELS)
 corpus = hLDA_model.generateDocuments(NUM_DOCUMENTS, NUM_WORDS)
 hLDA_model.printTree(10);
 
-fwrite = open('sim.txt', 'w+')
+fwrite = open('run' + str(input) + '/sim.txt', 'w+')
 
 for doc_i, document in enumerate(corpus):
     fwrite.write("Document <" + str(doc_i) + "> \n")
@@ -229,7 +236,7 @@ for doc_i, document in enumerate(corpus):
 fwrite.close()
 
 # Need to output [# of unique terms] [term #] : [count] ...
-fwrite = open('sim.dat', 'w+')
+fwrite = open('run' + str(input) + '/sim.dat', 'w+')
 for doc_i, document in enumerate(corpus):
     c = Counter(document)
     fwrite.write(str(len(c)) + " ")
@@ -241,7 +248,7 @@ for doc_i, document in enumerate(corpus):
 
 fwrite.close()
 
-fwrite = open('sim_vocab.txt', 'w+')
+fwrite = open('run' + str(input) + '/sim_vocab.txt', 'w+')
 for word in id_to_word:
     fwrite.write(word + '\n')
 fwrite.close
