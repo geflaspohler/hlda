@@ -25,6 +25,7 @@ def top_n_words(topic,
     vocab is a map from integers to words
 
     """
+
     indices = range(len(vocab)-1)
     indices.sort(lambda x,y: -cmp(topic[x], topic[y]))
     return([vocab[i] for i in indices[0:nwords]])
@@ -68,7 +69,6 @@ def read_state(state_filename,
     header = state.readline()
     tree = {}
     for line in state:
-
         (id, parent, ndocs, nwords, scale, word_cnt) = line.split(None, 5)
         (id, parent, ndocs, nwords) = [int(x) for
                                        x in [id, parent, ndocs, nwords]]

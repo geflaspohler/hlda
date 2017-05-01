@@ -200,10 +200,10 @@ class GenerativeModel:
 # Parameters
 NUM_DOCUMENTS = 100;
 VOCAB_SIZE = 100
-NUM_WORDS = 250;
+NUM_WORDS = 500;
 NUM_LEVELS = 3
 
-# Create a vocab of 250 words
+# Create a vocab of VOCAB_SIZE words
 vocab_filename = "/home/genevieve/mit-whoi/hlda/ap/vocab.txt"
 id_to_word = map(str.strip, file(vocab_filename, "r").readlines())
 id_to_word = id_to_word[0:VOCAB_SIZE]
