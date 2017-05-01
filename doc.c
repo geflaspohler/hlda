@@ -4,7 +4,6 @@
  * resample the levels of a document
  *
  */
-
 void doc_sample_levels(doc* d,
                        short do_permute,
                        short do_remove)
