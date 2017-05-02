@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <string.h>
 
-#define MAX_ITER 50000
+#define MAX_ITER 5000
 #define TEST_LAG 100
 #define NRESTARTS 1
 
