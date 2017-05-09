@@ -48,6 +48,7 @@ void doc_sample_levels(doc* d,
         int new_l = sample_from_log(log_prob);
         topic_update_word(d->path[new_l], w, 1.0);
         ivset(d->levels, i, new_l);
+
         // !!! this should take the word position, and remove or add it
         doc_update_level(d, new_l, 1.0);
     }
@@ -113,16 +114,20 @@ void read_corpus(char* data_filename, corpus* c, int depth)
 {
     outlog("READING CORPUS FROM %s", data_filename);
 
-    FILE *fileptr;
-    int nunique, count, word, n, i, total = 0;
+    FILE *fileptr, *levelptr;
+    int nunique, count, word, n, i, total, level, levelunique, levelword = 0;
     doc *d;
     c->nterms = 0;
     c->ndoc = 0;
 
     fileptr = fopen(data_filename, "r");
+    // Open the file for initializing levels
+    levelptr = fopen("/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images/levels1000.dat", "r");
 
     while (fscanf(fileptr, "%10d", &nunique) != EOF)
     {
+        fscanf(levelptr, "%10d", &levelunique);
+
         c->ndoc = c->ndoc + 1;
 
         if ((c->ndoc % 100) == 0) outlog("read doc %d", c->ndoc);
@@ -132,29 +137,41 @@ void read_corpus(char* data_filename, corpus* c, int depth)
         d = c->doc[c->ndoc-1];
         d->id = c->ndoc-1;
         d->word = new_int_vector(0);
+        d->start_levels = new_int_vector(0);
+        d->levels = new_int_vector(0);
 
         // read document
-
-        for (n = 0; n < nunique; n++)
-        {
+        for (n = 0; n < nunique; n++) {
             fscanf(fileptr, "%10d:%10d", &word, &count);
-            total += count;
             word = word - OFFSET;
+            total += count;
             assert(word >= 0);
 
-            if (word >= c->nterms)
-            {
+            if (word >= c->nterms) {
                 c->nterms = word + 1;
             }
-            for (i = 0; i < count; i++)
-            {
+            for (i = 0; i < count; i++) {
                 ivappend(d->word, word);
             }
         }
+        for (n = 0; n < levelunique; n++){
+            fscanf(levelptr, "%10d:%10d", &levelword, &level);
+            assert(levelword >= 0);
+
+            // printf("word: %d, levelword: %d, level: %d \n", word, levelword, level);
+
+            assert(level < 3);
+            assert(level >= 0);
+
+            ivappend(d->start_levels, level);
+            ivappend(d->levels, level); // [added]
+        }
+        // printf("size of levels: %d, origonal: %d \n", levelunique, d->word->size);
+
 
         // set up gibbs state variables
 
-        d->levels      = new_int_vector(d->word->size);
+        // d->levels      = new_int_vector(d->word->size); // [removed]
         d->path        = malloc(sizeof(topic*) * depth);
         d->tot_levels  = gsl_vector_calloc(depth);
         d->log_p_level = gsl_vector_calloc(depth);
@@ -231,6 +248,26 @@ void write_corpus_assignment(corpus* corp, FILE* file)
         fprintf(file, "\n");
     }
 }
+
+/*
+ * [inserted]
+ * write corpus assignment
+ * each line contains a list of the topic assigned to each word
+ *
+ */
+void write_word_assignment(corpus* corp, FILE* file)
+{
+    int d, l, level;
+    for (d = 0; d < corp->ndoc; d++){
+        fprintf(file, "%d", corp->doc[d]->id);
+        for (l = 0; l < corp->doc[d]->word->size; l++){
+            level = ivget(corp->doc[d]->levels, l);
+            fprintf(file, " %d", corp->doc[d]->path[level]->id);
+        }
+        fprintf(file, "\n");
+    }
+}
+
 
 
 void write_corpus_levels(corpus* corp, FILE* file)

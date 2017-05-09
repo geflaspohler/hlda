@@ -45,6 +45,7 @@ typedef struct tree
 typedef struct doc
 {
     int_vector* word;            // each word
+    int_vector* start_levels;    // initial guess at the level for each word 
     int_vector* levels;          // level assigned to each word
 
     int id;

@@ -11,9 +11,9 @@ import re
 
 # Open files
 VOCAB_SIZE = 1000
-filepath = '/home/genevieve/mit-whoi/hlda/inference-panama-0302-images/run005'
-savepath1 = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images/run005-topic-clusters-1'
-savepath2 = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images/run005-topic-clusters-2'
+filepath = '/home/genevieve/mit-whoi/hlda/inference-panama-0302-images/run008'
+savepath1 = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images/run008-topic-clusters-1'
+savepath2 = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images/run008-topic-clusters-2'
 imagepath = '/home/genevieve/mit-whoi/hlda/dataset-panama-0302-images'
 docupath = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images/sim-vocab1000.dat'
 

@@ -65,6 +65,7 @@ void compute_log_p_level(doc* d, double gem_mean, double gem_scale);
  */
 
 void write_corpus_assignment(corpus* corp, FILE* file);
+void write_word_assignment(corpus* corp, FILE* file);
 void write_corpus_levels(corpus* corp, FILE* file);
 
 // free a corpus

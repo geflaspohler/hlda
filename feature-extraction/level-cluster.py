@@ -10,7 +10,7 @@ VOCAB_SIZE = 1000
 NUM_LEVELS = 3
 
 datapath = '/home/genevieve/mit-whoi/hlda/documents-panama-0302-images'
-savepath = '/home/genevieve/mit-whoi/hlda/scaled-docs-panama-0302-images'
+savepath = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images'
 
 def get_key(filename):
     return int(filename[3:-4])
@@ -48,21 +48,31 @@ NUM_RESTARTS = 10
 compactness, labels, centers = cv2.kmeans(scales, NUM_LEVELS, criteria, NUM_RESTARTS, flags)
 print 'Kmeans finished with compactness:', compactness
 
-
-if not os.path.exists(savepath):
-    os.makedirs(savepath)
+# Ensure that the labels are in order of size
+center_fixed = [x[0] for x in centers];
+print "centers", center_fixed 
+order = list(np.argsort(center_fixed))
+print order
 
 # Write results to file: <index> <cluster id> <keypoint size>
+fwrite = open(os.path.join(savepath, 'levels' + str(VOCAB_SIZE) + '.dat'), 'w+')
 word_index = 0;
 for index, doc_len in enumerate(doc_lengths):
-    doc = open(os.path.join(savepath, 'doc' + str(index+1) + '.txt'), 'w+')
     print "Writing to document", index, "with length", doc_len
-    for i in xrange(doc_len):
-        doc.write(str(i) + "," + str(word_ids[word_index+i]) + "," + str(labels[word_index+i, 0]) + '\n')
+    
     if doc_len == 0:
-        doc.write('empty,empty,empty\n')
+        fwrite.write('1 0:1\n') # Dummy word for the images with no words, so that the document indexing remains correct 
 
-    # Close file
-    doc.close()
+    else:
+        fwrite.write(str(doc_len) + ' ')
+        for i in xrange(doc_len):
+            if i == doc_len-1:
+                fwrite.write(str(word_ids[word_index+i]) + ":" + str(order.index(labels[word_index+i, 0])) + '\n')
+            else:
+                fwrite.write(str(word_ids[word_index+i]) + ":" + str(order.index(labels[word_index+i, 0])) + ' ')
+
     word_index += doc_len;
+
+# Close file
+fwrite.close()
 

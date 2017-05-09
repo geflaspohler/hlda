@@ -23,8 +23,17 @@ void write_gibbs_state(gibbs_state * state, char* filename)
     write_tree(tr, file);
     char assign_filename[100];
     sprintf(assign_filename, "%s.assign", filename);
+
+
     FILE* assign_file = fopen(assign_filename, "w");
     write_corpus_assignment(corp, assign_file);
+    // [inserted]
+    char word_filename[100];
+    sprintf(word_filename, "%s.words", filename);
+    FILE* word_assign_file = fopen(word_filename, "w");
+    write_word_assignment(corp, word_assign_file);
+    fclose(word_assign_file);
+    // [end inserted]
     fclose(assign_file);
     fclose(file);
 }
@@ -181,7 +190,12 @@ void init_gibbs_state(gibbs_state* state)
             d->path[j] = d->path[j+1]->parent;
             topic_update_doc_cnt(d->path[j], 1.0);
         }
+
+        // This origonal code randomly samples the levels based on the 
+        // gem distriubtion
         doc_sample_levels(d, 0, 0);
+
+        
         if (i > 0) tree_sample_doc_path(tr, d, 1, 0);
         doc_sample_levels(d, 0, 1);
     }
@@ -371,7 +385,6 @@ double mean_heldout_score(corpus* corp,
     free(state);
     return(score);
 }
-
 
 void free_gibbs_state(gibbs_state* state)
 {
