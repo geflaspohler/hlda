@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-filepath = './data'
+filepath = '/home/genevieve/mit-whoi/hlda/dataout-panama-0302-images'
 VOCAB_SIZE = 5000;
 
 # Need to output [vocab_word]

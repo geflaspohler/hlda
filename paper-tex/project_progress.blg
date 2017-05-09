@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: project_progress.aux
+The style file: unsrtnat.bst
+Database file #1: hlda.bib
+Warning--I didn't find a database entry for "eq1"
+Warning--I didn't find a database entry for "eq2"
+Warning--empty journal in Sivic
+Warning--empty year in Sivic
+Warning--empty year in Sivic
+You've used 2 entries,
+            2481 wiz_defined-function locations,
+            568 strings with 4994 characters,
+and the built_in function-call counts, 825 in all, are:
+= -- 55
+> -- 66
+< -- 0
++ -- 24
+- -- 20
+* -- 78
+:= -- 152
+add.period$ -- 8
+call.type$ -- 2
+change.case$ -- 4
+chr.to.int$ -- 2
+cite$ -- 5
+duplicate$ -- 36
+empty$ -- 58
+format.name$ -- 22
+if$ -- 157
+int.to.chr$ -- 1
+int.to.str$ -- 3
+missing$ -- 2
+newline$ -- 20
+num.names$ -- 6
+pop$ -- 18
+preamble$ -- 1
+purify$ -- 2
+quote$ -- 0
+skip$ -- 20
+stack$ -- 0
+substring$ -- 4
+swap$ -- 3
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 14
+warning$ -- 3
+while$ -- 4
+width$ -- 0
+write$ -- 35
+(There were 5 warnings)
